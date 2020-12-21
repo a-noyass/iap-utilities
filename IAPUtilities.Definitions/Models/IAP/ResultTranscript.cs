@@ -70,10 +70,10 @@ namespace Microsoft.IAPUtilities.Definitions.Models.IAP
     {
         [JsonProperty("text")]
         public string Text { get; set; }
-       
+
         [JsonProperty("sentiment")]
         public string Sentiment { get; set; }
-        
+
         [JsonProperty("isNegated")]
         public bool IsNegated { get; set; }
     }

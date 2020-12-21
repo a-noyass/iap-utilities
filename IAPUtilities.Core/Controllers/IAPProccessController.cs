@@ -6,6 +6,7 @@ using Microsoft.IAPUtilities.Definitions.APIs.Services;
 using Microsoft.IAPUtilities.Definitions.Models.Luis;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,7 +62,8 @@ namespace Microsoft.IAPUtilities.Core.Controllers
 
                 // write result file
                 var outString = JsonConvert.SerializeObject(processedTranscript, Formatting.Indented);
-                await _storageService.StoreDataAsync(outString, "test.json");
+                var outFileName = Path.GetFileNameWithoutExtension(file) + ".json";
+                await _storageService.StoreDataAsync(outString, outFileName);
             });
             await Task.WhenAll(fileTasks);
         }

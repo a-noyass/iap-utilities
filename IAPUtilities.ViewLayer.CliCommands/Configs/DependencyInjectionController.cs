@@ -9,7 +9,6 @@ using Microsoft.IAPUtilities.Core.Services.Storage;
 using Microsoft.IAPUtilities.Core.Services.TextAnalytics;
 using Microsoft.IAPUtilities.Definitions.APIs.Controllers;
 using Microsoft.IAPUtilities.Definitions.APIs.Services;
-using Microsoft.IAPUtilities.Definitions.Configs.Consts;
 
 namespace Microsoft.IAPUtilities.ViewLayer.CliCommands.Configs
 {

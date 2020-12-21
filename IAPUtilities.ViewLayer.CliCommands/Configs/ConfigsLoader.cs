@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-using Microsoft.IAPUtilities.ViewLayer.CliCommands.Models.Configs;
 using Microsoft.IAPUtilities.Definitions.Configs.Consts;
 using Microsoft.IAPUtilities.Definitions.Exceptions.Configs;
+using Microsoft.IAPUtilities.ViewLayer.CliCommands.Models.Configs;
 using Newtonsoft.Json;
 using System.IO;
 
