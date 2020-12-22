@@ -49,7 +49,7 @@ namespace CustomTextCliUtils.Tests.IntegrationTests.Services.TextAnalytics
             {
                 // act
                 ITextAnalyticsService predictionService = new TextAnalyticsService(key, endpoint, language);
-                var result = await predictionService.PredictSentimentAsync(query);
+                var result = await predictionService.PredictSentimentAsync(query, true);
 
                 // assert
                 Assert.NotNull(result);
@@ -63,7 +63,7 @@ namespace CustomTextCliUtils.Tests.IntegrationTests.Services.TextAnalytics
                 await Assert.ThrowsAsync(expectedException.GetType(), async () =>
                 {
                     ITextAnalyticsService predictionService = new TextAnalyticsService(key, endpoint, language);
-                    await predictionService.PredictSentimentAsync(query);
+                    await predictionService.PredictSentimentAsync(query, true);
                 });
             }
         }

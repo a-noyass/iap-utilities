@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 using Microsoft.IAPUtilities.Definitions.APIs.Services;
 using Microsoft.IAPUtilities.Definitions.Enums.IAP;
-using Microsoft.IAPUtilities.Definitions.Exceptions;
 using Microsoft.IAPUtilities.Definitions.Models.IAP;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -48,7 +48,7 @@ namespace Microsoft.IAPUtilities.Core.Services.IAP
             }
             else
             {
-                throw new CliException("Invalid Id or Channel Format");
+                throw new Exception("Invalid Id or Channel Format");
             }
         }
 
