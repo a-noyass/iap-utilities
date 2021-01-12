@@ -31,7 +31,7 @@ namespace Microsoft.IAPUtilities.Core.Services.IAP
                     Text = prediction.Value.Query,
                     Timestamp = prediction.Key,
                     Extractions = prediction.Value.Entities,
-                    Sentiment = MapSentimentResponse(textAnalyticsPredictions[prediction.Key])
+                    Sentiment = textAnalyticsPredictions.ContainsKey(prediction.Key) ? MapSentimentResponse(textAnalyticsPredictions[prediction.Key]) : null
                 };
             });
 

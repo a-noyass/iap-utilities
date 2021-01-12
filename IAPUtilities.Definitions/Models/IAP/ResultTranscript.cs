@@ -27,6 +27,7 @@ namespace Microsoft.IAPUtilities.Definitions.Models.IAP
         [JsonProperty("extractions")]
         public List<Extraction> Extractions { get; set; }
 
+        [JsonProperty("sentiment", NullValueHandling = NullValueHandling.Ignore)]
         public Sentiment Sentiment { get; set; }
     }
 

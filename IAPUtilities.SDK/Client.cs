@@ -20,6 +20,12 @@ namespace IAPUtilities.SDK
         private IIAPResultGenerator _resultGenerator;
         private ITextAnalyticsService _textAnalyticsService;
 
+        public Client(string luisEndpoint, string luisKey, string luisAppId)
+        {
+            _luisPredictionService = new LuisPredictionService(luisEndpoint, luisKey, luisAppId);
+            _transcriptParser = new TranscriptParser();
+            _resultGenerator = new IAPResultGenerator();
+        }
         public Client(string luisEndpoint, string luisKey, string luisAppId, string textAnalyticsEndpoint, string textAnalyticsKey, string language = Constants.TextAnalyticsLanguageCode)
         {
             _luisPredictionService = new LuisPredictionService(luisEndpoint, luisKey, luisAppId);
@@ -28,7 +34,7 @@ namespace IAPUtilities.SDK
             _textAnalyticsService = new TextAnalyticsService(textAnalyticsEndpoint, textAnalyticsKey, language);
         }
 
-        public async Task<ResultTranscript> RunAsync(Stream file)
+        public async Task<ResultTranscript> RunAsync(Stream file, bool enableTA = false)
         {
             //  parse file (extract utterances)
             var transcript = await _transcriptParser.ParseTranscriptAsync(file);
@@ -37,10 +43,13 @@ namespace IAPUtilities.SDK
             var textAnalyticsDictionary = new ConcurrentDictionary<long, DocumentSentiment>();
             var tasks = transcript.Utterances.Select(async utterance =>
             {
-                    // run luis prediction endpoint
-                    luisDictionary[utterance.Timestamp] = await _luisPredictionService.Predict(utterance.Text);
-                    // run TA prediction endpoint
+                // run luis prediction endpoint
+                luisDictionary[utterance.Timestamp] = await _luisPredictionService.Predict(utterance.Text);
+                // run TA prediction endpoint
+                if (enableTA)
+                {
                     textAnalyticsDictionary[utterance.Timestamp] = await _textAnalyticsService.PredictSentimentAsync(utterance.Text, opinionMining: true);
+                }
             });
             await Task.WhenAll(tasks);
 
