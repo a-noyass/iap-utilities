@@ -1,0 +1,24 @@
+Id:29526270 Channel:0
+4800: Thank you so much for.##
+7780: Thank you so much for contacting Microsoft support. You are speaking with fire. Can I have your first name please?##
+19450: Baphia, is it correct?##
+25480: Fantastic OK. Hi Faye, thank you so much. How are you doing today?##
+33670: I'm doing good as well. Thank you so much for asking. And by the way, how can I help you with your office software, which seems to be the problem.##
+48440: Millimeter.##
+77200: Millimeter.##
+94120: Millimeter.##
+99610: I see well I'm I'm really sorry to hear that that you somehow lost access to all of your Word document. But let me help you out Fay and see what I can do. Let me just ask some questions to get a better picture in how we can better address your concern, OK?##
+119650: Alright, but before we proceed, can I ask for your email address and phone number connected with your connected here in Microsoft?##
+141250: At email.##
+144360: That##
+146130: millimeter thank you so much. How about your phone number?##
+152890: Millimeter.##
+154570: Millimeter.##
+156900: Thank you so much for that.##
+160800: This email address that you provided to me is this the license account. Tide up for your license or is the license provided by your school.##
+199070: I see well, how about this. Let's try to check all the in which email address the license associated with to make it easier to to you. Can you open your Microsoft Word?##
+214460: And your Microsoft Word at the upper left, where you can see the Apple icon. Beside that you will see word.##
+233230: At wm.edu, is that correct?##
+238070: Alright.##
+240870: Alright.##
+243370: Thank you so much. So since the license was provided by your school ofay, can you sign into a certain website using this school account? Can you somehow open your safari browser?##

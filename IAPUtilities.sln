@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IAPUtilities.Core", "IAPUti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IAPUtilities.Definitions", "IAPUtilities.Definitions\IAPUtilities.Definitions.csproj", "{314371A8-C8C6-4593-97BB-876AC2EBEC73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAPUtilities.SDK", "IAPUtilities.SDK\IAPUtilities.SDK.csproj", "{5E2F782D-4D57-43AD-8E19-0753AC7D5A25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IAPUtilities.SDK", "IAPUtilities.SDK\IAPUtilities.SDK.csproj", "{5E2F782D-4D57-43AD-8E19-0753AC7D5A25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{2DA6596B-7C23-4889-9DC4-380EAAC3A5FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IAPUtilities.Tests", "IAPUtilities.Tests\IAPUtilities.Tests.csproj", "{F806F793-85A3-4E89-BD9F-0193EE922DED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{5E2F782D-4D57-43AD-8E19-0753AC7D5A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E2F782D-4D57-43AD-8E19-0753AC7D5A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E2F782D-4D57-43AD-8E19-0753AC7D5A25}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DA6596B-7C23-4889-9DC4-380EAAC3A5FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DA6596B-7C23-4889-9DC4-380EAAC3A5FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DA6596B-7C23-4889-9DC4-380EAAC3A5FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DA6596B-7C23-4889-9DC4-380EAAC3A5FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F806F793-85A3-4E89-BD9F-0193EE922DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F806F793-85A3-4E89-BD9F-0193EE922DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F806F793-85A3-4E89-BD9F-0193EE922DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F806F793-85A3-4E89-BD9F-0193EE922DED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
