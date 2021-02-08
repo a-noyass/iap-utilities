@@ -1,4 +1,6 @@
-﻿using Azure.AI.TextAnalytics;
+﻿using Azure;
+using Azure.AI.TextAnalytics;
+using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime.Models;
 using Microsoft.IAPUtilities.Core.Services.IAP;
 using Microsoft.IAPUtilities.Core.Services.Luis;
 using Microsoft.IAPUtilities.Core.Services.TextAnalytics;
@@ -6,9 +8,11 @@ using Microsoft.IAPUtilities.Definitions.APIs.Services;
 using Microsoft.IAPUtilities.Definitions.Configs.Consts;
 using Microsoft.IAPUtilities.Definitions.Models.IAP;
 using Microsoft.IAPUtilities.Definitions.Models.Luis;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace IAPUtilities.SDK
@@ -43,18 +47,73 @@ namespace IAPUtilities.SDK
             var textAnalyticsDictionary = new ConcurrentDictionary<long, DocumentSentiment>();
             var tasks = transcript.Utterances.Select(async utterance =>
             {
-                // run luis prediction endpoint
-                luisDictionary[utterance.Timestamp] = await _luisPredictionService.Predict(utterance.Text);
-                // run TA prediction endpoint
+                await GetLuisResponse(utterance, luisDictionary);
                 if (enableTA)
                 {
-                    textAnalyticsDictionary[utterance.Timestamp] = await _textAnalyticsService.PredictSentimentAsync(utterance.Text, opinionMining: true);
+                    await GetTextAnalyticsResponse(utterance, textAnalyticsDictionary);
                 }
             });
             await Task.WhenAll(tasks);
 
             // concatenate result
             return _resultGenerator.GenerateResult(luisDictionary, textAnalyticsDictionary, transcript.Channel, transcript.Id);
+        }
+
+        private async Task GetTextAnalyticsResponse(ConversationUtterance utterance, ConcurrentDictionary<long, DocumentSentiment> textAnalyticsDictionary)
+        {
+            var sent = false;
+            while (!sent)
+            {
+                try
+                {
+                    // run TA prediction endpoint
+                    textAnalyticsDictionary[utterance.Timestamp] = await _textAnalyticsService.PredictSentimentAsync(utterance.Text, opinionMining: true);
+                    sent = true;
+                }
+                catch (RequestFailedException e)
+                {
+                    if (e.Status == (int)HttpStatusCode.TooManyRequests)
+                    {
+                        await WaitRandomTime(Constants.RetryMaxWaitTimeInMillis);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private async Task GetLuisResponse(ConversationUtterance utterance, ConcurrentDictionary<long, CustomLuisResponse> luisDictionary)
+        {
+            var sent = false;
+            while (!sent)
+            {
+                try
+                {
+                    // run luis prediction endpoint
+                    luisDictionary[utterance.Timestamp] = await _luisPredictionService.Predict(utterance.Text);
+                    sent = true;
+                }
+                catch (ErrorException e)
+                {
+                    if (e.Response.StatusCode == HttpStatusCode.TooManyRequests)
+                    {
+                        await WaitRandomTime(Constants.RetryMaxWaitTimeInMillis);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private async Task WaitRandomTime(long MaxWaitTimeInMillis)
+        {
+            Random r = new Random();
+            var delay = new TimeSpan((long)(r.NextDouble() * 1000));
+            await Task.Delay(delay);
         }
     }
 }

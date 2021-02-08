@@ -25,7 +25,6 @@ namespace IAPUtilities.Tests
         {
             var fs = File.OpenRead(@"TestData\Transcript1.txt");
             var result = await _client.RunAsync(fs);
-            var expected = File.ReadAllText(@"C:\Users\v-noyasser\Desktop\iap-utilities\IAPUtilities.Tests\TestData\Transcript1Result.json");
 
             Assert.Equal(ChannelType.Agent, result.Meta.Channel);
             Assert.Equal("29526270", result.Meta.TranscriptId);
