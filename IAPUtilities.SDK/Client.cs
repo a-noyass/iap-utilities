@@ -10,6 +10,7 @@ using Microsoft.IAPUtilities.Definitions.Models.IAP;
 using Microsoft.IAPUtilities.Definitions.Models.Luis;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,20 +20,42 @@ namespace IAPUtilities.SDK
 {
     public class Client
     {
-        private ITranscriptParser _transcriptParser;
-        private ILuisPredictionService _luisPredictionService;
-        private IIAPResultGenerator _resultGenerator;
-        private ITextAnalyticsService _textAnalyticsService;
+        private readonly ITranscriptParser _transcriptParser;
+        private readonly IIAPResultGenerator _resultGenerator;
+        private readonly ITextAnalyticsService _textAnalyticsService;
+        private readonly List<LuisPredictionService> _luisPredictionServices;
 
         public Client(string luisEndpoint, string luisKey, string luisAppId)
         {
-            _luisPredictionService = new LuisPredictionService(luisEndpoint, luisKey, luisAppId);
+            _luisPredictionServices = new List<LuisPredictionService>()
+            {
+                new LuisPredictionService(luisEndpoint, luisKey, luisAppId)
+            };
             _transcriptParser = new TranscriptParser();
             _resultGenerator = new IAPResultGenerator();
         }
+
+        public Client(List<LuisCredentials> credentials)
+        {
+            if (credentials == null || credentials.Count == 0)
+            {
+                throw new Exception("Credentials list can't be null or empty");
+            }
+            _luisPredictionServices = new List<LuisPredictionService>();
+            foreach (var credential in credentials)
+            {
+                _luisPredictionServices.Add(new LuisPredictionService(credential.Endpoint, credential.Key, credential.AppId));
+            }
+            _transcriptParser = new TranscriptParser();
+            _resultGenerator = new IAPResultGenerator();
+        }
+
         public Client(string luisEndpoint, string luisKey, string luisAppId, string textAnalyticsEndpoint, string textAnalyticsKey, string language = Constants.TextAnalyticsLanguageCode)
         {
-            _luisPredictionService = new LuisPredictionService(luisEndpoint, luisKey, luisAppId);
+            _luisPredictionServices = new List<LuisPredictionService>()
+            {
+                new LuisPredictionService(luisEndpoint, luisKey, luisAppId)
+            };
             _transcriptParser = new TranscriptParser();
             _resultGenerator = new IAPResultGenerator();
             _textAnalyticsService = new TextAnalyticsService(textAnalyticsEndpoint, textAnalyticsKey, language);
@@ -45,9 +68,9 @@ namespace IAPUtilities.SDK
 
             var luisDictionary = new ConcurrentDictionary<long, CustomLuisResponse>();
             var textAnalyticsDictionary = new ConcurrentDictionary<long, DocumentSentiment>();
-            var tasks = transcript.Utterances.Select(async utterance =>
+            var tasks = transcript.Utterances.Select(async (utterance, index) =>
             {
-                await GetLuisResponse(utterance, luisDictionary);
+                await GetLuisResponse(utterance, luisDictionary, index);
                 if (enableTA)
                 {
                     await GetTextAnalyticsResponse(utterance, textAnalyticsDictionary);
@@ -84,7 +107,7 @@ namespace IAPUtilities.SDK
             }
         }
 
-        private async Task GetLuisResponse(ConversationUtterance utterance, ConcurrentDictionary<long, CustomLuisResponse> luisDictionary)
+        private async Task GetLuisResponse(ConversationUtterance utterance, ConcurrentDictionary<long, CustomLuisResponse> luisDictionary, int index)
         {
             var sent = false;
             while (!sent)
@@ -92,7 +115,8 @@ namespace IAPUtilities.SDK
                 try
                 {
                     // run luis prediction endpoint
-                    luisDictionary[utterance.Timestamp] = await _luisPredictionService.Predict(utterance.Text);
+                    int clientIndex = index % _luisPredictionServices.Count;
+                    luisDictionary[utterance.Timestamp] = await _luisPredictionServices[clientIndex].Predict(utterance.Text);
                     sent = true;
                 }
                 catch (ErrorException e)
