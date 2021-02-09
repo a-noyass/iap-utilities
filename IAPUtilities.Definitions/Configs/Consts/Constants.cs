@@ -11,5 +11,6 @@ namespace Microsoft.IAPUtilities.Definitions.Configs.Consts
         public const string TextAnalyticsLanguageCode = "en";
 
         public const long RetryMaxWaitTimeInMillis = 1000;
+        public const int MaxRetries = 10;
     }
 }

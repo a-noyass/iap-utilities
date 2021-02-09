@@ -84,6 +84,7 @@ namespace IAPUtilities.SDK
 
         private async Task GetTextAnalyticsResponse(ConversationUtterance utterance, ConcurrentDictionary<long, DocumentSentiment> textAnalyticsDictionary)
         {
+            int retries = 0;
             var sent = false;
             while (!sent)
             {
@@ -95,7 +96,8 @@ namespace IAPUtilities.SDK
                 }
                 catch (RequestFailedException e)
                 {
-                    if (e.Status == (int)HttpStatusCode.TooManyRequests)
+                    retries++;
+                    if (e.Status == (int)HttpStatusCode.TooManyRequests && retries <= Constants.MaxRetries)
                     {
                         await WaitRandomTime(Constants.RetryMaxWaitTimeInMillis);
                     }
@@ -109,6 +111,7 @@ namespace IAPUtilities.SDK
 
         private async Task GetLuisResponse(ConversationUtterance utterance, ConcurrentDictionary<long, CustomLuisResponse> luisDictionary, int index)
         {
+            int retires = 0;
             var sent = false;
             while (!sent)
             {
@@ -121,7 +124,8 @@ namespace IAPUtilities.SDK
                 }
                 catch (ErrorException e)
                 {
-                    if (e.Response.StatusCode == HttpStatusCode.TooManyRequests)
+                    retires++;
+                    if (e.Response.StatusCode == HttpStatusCode.TooManyRequests && retires <= Constants.MaxRetries)
                     {
                         await WaitRandomTime(Constants.RetryMaxWaitTimeInMillis);
                     }
