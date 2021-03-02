@@ -12,5 +12,6 @@ namespace Microsoft.IAPUtilities.Definitions.Configs.Consts
 
         public const long RetryMaxWaitTimeInMillis = 1000;
         public const int MaxRetries = 10;
+        public const int MaxConcurrency = 10;
     }
 }

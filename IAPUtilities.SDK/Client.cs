@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IAPUtilities.SDK
@@ -68,15 +69,27 @@ namespace IAPUtilities.SDK
 
             var luisDictionary = new ConcurrentDictionary<long, CustomLuisResponse>();
             var textAnalyticsDictionary = new ConcurrentDictionary<long, DocumentSentiment>();
-            var tasks = transcript.Utterances.Select(async (utterance, index) =>
+
+            using (SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(Constants.MaxConcurrency))
             {
-                await GetLuisResponse(utterance, luisDictionary, index);
-                if (enableTA)
+                var tasks = transcript.Utterances.Select(async (utterance, index) =>
                 {
-                    await GetTextAnalyticsResponse(utterance, textAnalyticsDictionary);
-                }
-            });
-            await Task.WhenAll(tasks);
+                    concurrencySemaphore.Wait();
+                    try
+                    {
+                        await GetLuisResponse(utterance, luisDictionary, index);
+                        if (enableTA)
+                        {
+                            await GetTextAnalyticsResponse(utterance, textAnalyticsDictionary);
+                        }
+                    }
+                    finally
+                    {
+                        concurrencySemaphore.Release();
+                    }
+                });
+                await Task.WhenAll(tasks);
+            }
 
             // concatenate result
             return _resultGenerator.GenerateResult(luisDictionary, textAnalyticsDictionary, transcript.Channel, transcript.Id);
