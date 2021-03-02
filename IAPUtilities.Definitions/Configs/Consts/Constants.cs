@@ -9,5 +9,9 @@ namespace Microsoft.IAPUtilities.Definitions.Configs.Consts
         public const int TextAnalyticsPredictionMaxCharLimit = 5000;
         public const int TextAnaylticsApiCallDocumentLimit = 5;
         public const string TextAnalyticsLanguageCode = "en";
+
+        public const long RetryMaxWaitTimeInMillis = 1000;
+        public const int MaxRetries = 10;
+        public const int MaxConcurrency = 10;
     }
 }
